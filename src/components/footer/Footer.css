@@ -1,0 +1,7 @@
+Footer {
+    flex: 1 0 auto;
+}
+
+.page-footer {
+    background-color: var(--navFooter-BColor);
+}
