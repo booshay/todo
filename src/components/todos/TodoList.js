@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { delTodo } from '../../store/actions/todoActions';
-
+import { Link } from 'react-router-dom'
 
 function mapStateToProps(state) {
     return {
@@ -9,7 +9,7 @@ function mapStateToProps(state) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
     return {
         delTodo: (id) => dispatch(delTodo(id))
     };
@@ -22,7 +22,7 @@ class TodoList extends Component {
         if (todos) {
             todoList = todos.map((e) => {
                 return (
-                    <div key={e.id} className="">
+                    <Link to={'/todo/' + e.id} key={e.id} className="">
                         <div className="">
                             <div className="card-panel blue-grey darken-1">
                                 <div className="card-content white-text">
@@ -30,11 +30,11 @@ class TodoList extends Component {
                                     <p>{e.content}</p>
                                 </div>
                                 <div className="card-action">
-                                    <button onClick={() => this.props.delTodo(e.id)} className="btn btn-flat orange darken-3">Delete</button>
+                                    <button onClick={() => this.props.delTodo(e.id)} className="btn btn-flat  white-text red darken-3">Delete</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </Link>
                 )
             })
         }

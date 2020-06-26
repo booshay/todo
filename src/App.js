@@ -7,6 +7,7 @@ import Footer from './components/footer/Footer';
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import AddTodo from './components/todos/AddTodo';
+import TodoDetails from './components/todos/TodoDetails'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Navbar />
         <Switch>
           <Route exact path='/' component={Dashboard} />
+          <Route exact path='/todo/:id' component={TodoDetails} />
           <Route exact path='/signin' component={SignIn} />
           <Route exact path='/signup' component={SignUp} />
           <Route exact path='/addTodo' component={AddTodo} />
