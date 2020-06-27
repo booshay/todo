@@ -22,19 +22,20 @@ class TodoList extends Component {
         if (todos) {
             todoList = todos.map((e) => {
                 return (
-                    <Link to={'/todo/' + e.id} key={e.id} className="">
-                        <div className="">
-                            <div className="card-panel blue-grey darken-1">
+                    <div key={e.id} className="">
+                        <div className="card-panel blue-grey darken-1">
+                            <Link to={'/todo/' + e.id} className="">
                                 <div className="card-content white-text">
                                     <span className="card-title">{e.title}</span>
                                     <p>{e.content}</p>
                                 </div>
-                                <div className="card-action">
-                                    <button onClick={() => this.props.delTodo(e.id)} className="btn btn-flat  white-text red darken-3">Delete</button>
-                                </div>
+                            </Link>
+                            <div className="card-action">
+                                <button onClick={() => this.props.delTodo(e.id)} className="btn btn-flat  white-text red darken-3">Delete</button>
                             </div>
                         </div>
-                    </Link>
+                    </div>
+
                 )
             })
         }

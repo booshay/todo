@@ -3,34 +3,50 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { createStore, applyMiddleware, compose } from 'redux';
-import { Provider } from 'react-redux';
-import rootReducer from './store/reducers/rootReducer';
-import thunk from 'redux-thunk';
+import { Provider, useSelector } from 'react-redux';
 import fbConfig from './config/fbConfig';
-import { reduxFirestore, getFirestore } from 'redux-firestore';
-import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
+import firebase from 'firebase/app'
+import 'firebase/firestore' // <- needed if using firestore
+import 'firebase/auth'
+import { createFirestoreInstance } from 'redux-firestore';
+import { ReactReduxFirebaseProvider, isLoaded } from 'react-redux-firebase';
+import createReduxStore from './store/createReduxStore';
 
-const config = {
+var firebaseConfig = fbConfig;
+
+const rrfConfig = {
   userProfile: 'users', // firebase root where user profiles are stored
   attachAuthIsReady: true, // attaches auth is ready promise to store
   firebaseStateName: 'firebase', // should match the reducer name ('firebase' is default)
   useFirestoreForProfile: true
 }
 
-const store = createStore(rootReducer,
-  compose(
-    applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore })),
-    reactReduxFirebase(fbConfig, config),
-    reduxFirestore(fbConfig) // redux bindings for firestore
-  )
-);
+// Initialize firebase instance
+firebase.initializeApp(firebaseConfig)
 
-store.firebaseAuthIsReady.then(() => {
-  ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+// Initialize other services on firebase instance
+firebase.firestore() // <- needed if using firestore
 
-  // If you want your app to work offline and load faster, you can change
-  // unregister() to register() below. Note this comes with some pitfalls.
-  // Learn more about service workers: https://bit.ly/CRA-PWA
-  serviceWorker.unregister();
-});
+
+const store = createReduxStore()
+
+const rrfProps = {
+  firebase,
+  config: rrfConfig,
+  dispatch: store.dispatch,
+  createFirestoreInstance
+}
+
+function AuthIsLoaded({ children }) {
+  const auth = useSelector(state => state.firebase.auth)
+  if (!isLoaded(auth)) return <div>Loading Screen...</div>;
+  return children
+}
+
+ReactDOM.render(< Provider store={store} >
+  <ReactReduxFirebaseProvider {...rrfProps}>
+    <AuthIsLoaded><App /> </AuthIsLoaded>
+  </ReactReduxFirebaseProvider>
+</Provider >, document.getElementById('root'));
+
+serviceWorker.unregister();

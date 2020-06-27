@@ -16,3 +16,7 @@ p {
 .card-panel {
     min-width: 200px;
 }
+
+.dashboard {
+    min-height: 80vh;
+}
